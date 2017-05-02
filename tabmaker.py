@@ -1,16 +1,26 @@
+from sys import stdout
 from argparse import ArgumentParser, FileType
 
 parser = ArgumentParser()
 
 parser.add_argument(
-    'file',
+    'in_file',
+    metavar='FILE',
     type=FileType('r'),
     help='The file to convert'
+)
+parser.add_argument(
+    'out_file',
+    nargs='?',
+    metavar='FILE',
+    type=FileType('w'),
+    default=stdout,
+    help='The file to write the output to (defaults to stdout)'
 )
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    flines = args.file.readlines()
+    flines = args.in_file.readlines()
     for l in flines:
         line = ''
         grab = False  # Set to True when we're grabbing chords
@@ -36,5 +46,5 @@ if __name__ == '__main__':
                         chord_length -= 1
                     line += c
         if chords.strip():
-            print(chords)
-        print(line)
+            args.out_file.write(chords + '\n')
+        args.out_file.write(line + '\n')

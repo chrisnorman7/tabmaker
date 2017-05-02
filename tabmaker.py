@@ -1,47 +1,40 @@
-from sys import argv
+from argparse import ArgumentParser, FileType
 
-def help_msg():
-  return 'Syntax: ' + argv[0] + ' <file>'
+parser = ArgumentParser()
 
-if len(argv) < 2:
-  exit(help_msg())
+parser.add_argument(
+    'file',
+    type=FileType('r'),
+    help='The file to convert'
+)
 
-if argv[0] == '--help':
-  print(help_msg())
-  quit()
-
-fname = argv[-1]
-try:
-  fhandle = open(fname, 'r')
-  flines = fhandle.readlines()
-  fhandle.close()
-except IOError as ferror:
-  exit('Cannot open file: ' + str(ferror))
-
-for l in flines:
-  line = ''
-  grab = 0
-  chords = ''
-  chord_length = 0
-  l = l.replace('\n', '')
-  for c in l:
-    if c == '[':
-      while chord_length > 0:
-        line += '.'
-        chord_length -= 1
-      grab = 1
-    elif c == ']':
-      grab = 0
-    else:
-      if grab:
-        chord_length += 1
-        chords += c
-      else:
-        if not chord_length:
-          chords += ' '
-        else:
-          chord_length -= 1
-        line += c
-  if chords.replace(' ', ''):
-    print chords
-    print line
+if __name__ == '__main__':
+    args = parser.parse_args()
+    flines = args.file.readlines()
+    for l in flines:
+        line = ''
+        grab = False  # Set to True when we're grabbing chords
+        chords = ''
+        chord_length = 0
+        l = l.replace('\n', '')
+        for c in l:
+            if c == '[':
+                while chord_length > 0:
+                    line += '.'
+                    chord_length -= 1
+                grab = True
+            elif c == ']':
+                grab = 0
+            else:
+                if grab:
+                    chord_length += 1
+                    chords += c
+                else:
+                    if not chord_length:
+                        chords += ' '
+                    else:
+                        chord_length -= 1
+                    line += c
+        if chords.strip():
+            print(chords)
+        print(line)

@@ -1,10 +1,12 @@
 tabmaker
 ========
 
-This program generates song lyrics with chords above the correct words given songs in the correct format.
+This program installs a script which generates song lyrics with chords above the correct words given a file in the correct format.
 
 Syntax:
-tabmaker.py in_file[ out_file]
+```
+tabmaker in_file[ out_file]
+```
 
 infile must be a plain text file with square brackets around the chords:
 

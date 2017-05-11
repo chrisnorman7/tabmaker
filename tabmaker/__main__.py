@@ -17,6 +17,13 @@ parser.add_argument(
     default=stdout,
     help='The file to write the output to (defaults to stdout)'
 )
+parser.add_argument(
+    '-p',
+    '--pad_char',
+    metavar='CHARACTER',
+    default=' ',
+    help='The character to use for padding'
+)
 
 
 def main():
@@ -43,11 +50,11 @@ def main():
                     chords += c
                 else:
                     if not chord_length:
-                        chords += ' '
+                        chords += args.pad_char
                     else:
                         chord_length -= 1
                     line += c
-        if chords.strip():
+        if chords.strip(args.pad_char):
             args.out_file.write(chords + '\n')
         args.out_file.write(line + '\n')
 

@@ -18,7 +18,9 @@ parser.add_argument(
     help='The file to write the output to (defaults to stdout)'
 )
 
-if __name__ == '__main__':
+
+def main():
+    """Main entry point."""
     args = parser.parse_args()
     flines = args.in_file.readlines()
     for l in flines:
@@ -48,3 +50,7 @@ if __name__ == '__main__':
         if chords.strip():
             args.out_file.write(chords + '\n')
         args.out_file.write(line + '\n')
+
+
+if __name__ == '__main__':
+    main()

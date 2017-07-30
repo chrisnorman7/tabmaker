@@ -10,9 +10,7 @@ html_header = """<!doctype html>
 <head>
 <title>Tabmaker - %s</title>
 <style>
-body {
-    font-family: "Courier New", Courier, monospace
-}
+%s
 </style>
 </head>
 <body>
@@ -38,6 +36,12 @@ parser.add_argument(
     '--html',
     action='store_true',
     help='Output as HTML'
+)
+parser.add_argument(
+    '--style-sheet',
+    type=FileType('r'),
+    default=None,
+    help='The stylesheet to use'
 )
 parser.add_argument(
     '-p',
@@ -85,9 +89,18 @@ def main():
         output.append(line)
     output = '\n'.join(output)
     if args.html:
+        if args.style_sheet is None:
+            style = ''
+        else:
+            style = args.style_sheet.read()
         output = markdown(output)
         output += '\n</body>\n</html>'
-        output = (html_header % args.in_file.name) + output
+        output = (
+            html_header % (
+                args.in_file.name,
+                style
+            )
+        ) + output
     args.out_file.write(output)
 
 

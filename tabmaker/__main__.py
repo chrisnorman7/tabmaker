@@ -1,5 +1,22 @@
 from sys import stdout
 from argparse import ArgumentParser, FileType
+try:
+    from markdown import markdown
+except ModuleNotFoundError:
+    markdown = None
+
+html_header = """<!doctype html>
+<html>
+<head>
+<title>Tabmaker - %s</title>
+<style>
+body {
+    font-family: "Courier New", Courier, monospace
+}
+</style>
+</head>
+<body>
+"""
 
 parser = ArgumentParser()
 
@@ -18,6 +35,11 @@ parser.add_argument(
     help='The file to write the output to (defaults to stdout)'
 )
 parser.add_argument(
+    '--html',
+    action='store_true',
+    help='Output as HTML'
+)
+parser.add_argument(
     '-p',
     '--pad_char',
     metavar='CHARACTER',
@@ -29,6 +51,10 @@ parser.add_argument(
 def main():
     """Main entry point."""
     args = parser.parse_args()
+    if args.html and markdown is None:
+        print('Cannot output as HTML, markdown is not available.')
+        raise SystemExit
+    output = []  # Use '\n'.join() to make text.
     flines = args.in_file.readlines()
     for l in flines:
         line = ''
@@ -55,8 +81,14 @@ def main():
                         chord_length -= 1
                     line += c
         if chords.strip(args.pad_char):
-            args.out_file.write(chords + '\n')
-        args.out_file.write(line + '\n')
+            output.append(chords)
+        output.append(line)
+    output = '\n'.join(output)
+    if args.html:
+        output = markdown(output)
+        output += '\n</body>\n</html>'
+        output = (html_header % args.in_file.name) + output
+    args.out_file.write(output)
 
 
 if __name__ == '__main__':

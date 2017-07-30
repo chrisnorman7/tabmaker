@@ -86,6 +86,8 @@ def main():
                     line += c
         if chords.strip(args.pad_char):
             output.append(chords)
+        if args.html:
+            output.html('')
         output.append(line)
     output = '\n'.join(output)
     if args.html:

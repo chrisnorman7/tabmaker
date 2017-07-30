@@ -47,7 +47,6 @@ parser.add_argument(
     '-p',
     '--pad_char',
     metavar='CHARACTER',
-    default=' ',
     help='The character to use for padding'
 )
 
@@ -58,6 +57,11 @@ def main():
     if args.html and markdown is None:
         print('Cannot output as HTML, markdown is not available.')
         raise SystemExit
+    if args.pad_char is None:
+        if args.html:
+            args.pad_char = '&nbsp;'
+        else:
+            args.pad_char = ' '
     output = []  # Use '\n'.join() to make text.
     flines = args.in_file.readlines()
     for l in flines:
@@ -89,6 +93,8 @@ def main():
         if args.html:
             output.append('')
         output.append(line)
+        if args.html:
+            output.append('')
     output = '\n'.join(output)
     if args.html:
         if args.style_sheet is None:

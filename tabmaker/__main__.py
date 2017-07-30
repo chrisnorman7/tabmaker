@@ -10,8 +10,7 @@ html_header = """<!doctype html>
 <head>
 <title>Tabmaker - %s</title>
 <style>
-%s
-</style>
+%s</style>
 </head>
 <body>
 """

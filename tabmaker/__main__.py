@@ -2,7 +2,7 @@ from sys import stdout
 from argparse import ArgumentParser, FileType
 try:
     from markdown import markdown
-except ModuleNotFoundError:
+except ImportError:
     markdown = None
 
 html_header = """<!doctype html>
